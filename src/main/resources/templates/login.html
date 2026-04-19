@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Hospy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body th:class="${role == 'admin'} ? 'bg-gradient-to-br from-indigo-500 to-purple-700 min-h-screen flex flex-col items-center justify-center' : (${role == 'doctor'} ? 'bg-blue-500 min-h-screen flex flex-col items-center justify-center' : 'bg-[#00a87a] min-h-screen flex flex-col items-center justify-center')">
+
+    <!-- Header Area -->
+    <div class="text-center mb-8">
+        <div class="bg-white rounded-full p-4 mb-4 shadow-md inline-block">
+            <!-- Icon changing dynamically -->
+            <svg th:if="${role == 'patient'}" class="w-8 h-8 text-[#00a87a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            <svg th:if="${role == 'doctor'}" class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <svg th:if="${role == 'admin'}" class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+        </div>
+        
+        <!-- Titles dynamically -->
+        <h1 class="text-3xl font-bold text-white mb-2" th:text="${role == 'admin' ? 'Panel Administrativo' : (role == 'doctor' ? 'Portal Médico' : 'Portal del Paciente')}">Portal</h1>
+        <p class="text-white/80 font-medium">Sistema Hospy</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        
+        <h2 class="text-2xl font-bold text-center text-slate-800 mb-8">Iniciar Sesión</h2>
+        
+        <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline" th:text="${error}"></span>
+        </div>
+
+        <form th:action="@{/process-login}" method="post" class="space-y-5">
+            <div>
+                <label for="username" class="block text-sm font-medium text-slate-700 mb-1" th:text="${role == 'admin'} ? 'Usuario' : 'Email'">Email</label>
+                <input type="text" id="username" name="username" 
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:outline-none transition-shadow"
+                    th:classappend="${role == 'admin'} ? 'focus:ring-purple-500' : (${role == 'doctor'} ? 'focus:ring-blue-500' : 'focus:ring-emerald-500')"
+                    placeholder="ejemplo@correo.com" required>
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+                <input type="password" id="password" name="password" 
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:outline-none transition-shadow"
+                    th:classappend="${role == 'admin'} ? 'focus:ring-purple-500' : (${role == 'doctor'} ? 'focus:ring-blue-500' : 'focus:ring-emerald-500')"
+                    placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" 
+                class="w-full py-3 px-4 text-white font-bold rounded-lg shadow-sm transition-all focus:outline-none focus:ring-4"
+                th:classappend="${role == 'admin'} ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-300' : (${role == 'doctor'} ? 'bg-[#0ea5e9] hover:bg-blue-600 focus:ring-blue-300' : 'bg-[#10b981] hover:bg-emerald-600 focus:ring-emerald-300')"
+                >
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div class="mt-8 text-center text-sm">
+            <a th:if="${role == 'patient'}" href="/register" class="text-emerald-600 hover:underline font-medium block mb-2">¿No tienes cuenta? Regístrate aquí</a>
+            <a href="/" class="text-slate-500 hover:text-slate-700 transition-colors">
+                ← Volver al selector de portales
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

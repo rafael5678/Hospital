@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrativo - Hospy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 flex h-screen overflow-hidden text-slate-800">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-purple-900 text-white flex flex-col">
+        <div class="p-6 border-b border-purple-800">
+            <h2 class="text-2xl font-bold">Hospy Base</h2>
+            <p class="text-purple-300 text-sm">Administración</p>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="/admin/dashboard" class="flex items-center gap-3 bg-purple-800 text-white p-3 rounded-lg font-medium">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Dashboard
+            </a>
+            <a href="/admin/doctors/create" class="flex items-center gap-3 text-purple-200 hover:bg-purple-800 hover:text-white p-3 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Añadir Médico
+            </a>
+        </nav>
+        <div class="p-4 border-t border-purple-800">
+            <a href="/logout" class="flex items-center gap-3 text-purple-200 hover:text-white p-2 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto p-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-slate-800">Visión General</h1>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                <div class="bg-blue-100 text-blue-600 p-4 rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-500 font-medium">Total Médicos</p>
+                    <p class="text-2xl font-bold text-slate-800" th:text="${totalDoctors}">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                <div class="bg-emerald-100 text-emerald-600 p-4 rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-500 font-medium">Pacientes Activos</p>
+                    <p class="text-2xl font-bold text-slate-800" th:text="${totalPatients}">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                <div class="bg-purple-100 text-purple-600 p-4 rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-500 font-medium">Citas Agendadas</p>
+                    <p class="text-2xl font-bold text-slate-800" th:text="${totalAppointments}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Directory Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h3 class="text-lg font-bold text-slate-800">Directorio de Médicos</h3>
+                <div class="space-x-2">
+                    <a href="/admin/patients/create" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        + Registrar Paciente
+                    </a>
+                    <a href="/admin/doctors/create" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        + Nuevo Médico
+                    </a>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-slate-500 text-sm">
+                        <tr>
+                            <th class="p-4 font-medium">Médico</th>
+                            <th class="p-4 font-medium">Especialidad</th>
+                            <th class="p-4 font-medium">Modalidad/Horario</th>
+                            <th class="p-4 font-medium">Contacto</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr th:each="doc : ${doctors}" class="hover:bg-slate-50/50 transition-colors">
+                            <td class="p-4">
+                                <div class="font-medium text-slate-800" th:text="${'Dr. ' + doc.firstName + ' ' + doc.lastName}">Nombre</div>
+                                <div class="text-xs text-slate-500" th:text="${doc.user.email}">correo@hospy.com</div>
+                            </td>
+                            <td class="p-4">
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium" th:text="${doc.specialty}">Especialidad</span>
+                            </td>
+                            <td class="p-4">
+                                <div class="text-sm font-medium text-slate-800 flex items-center gap-1">
+                                    <span th:if="${doc.modality == 'Virtual'}" class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                    <span th:if="${doc.modality == 'Presencial'}" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <span th:if="${doc.modality == 'Híbrido'}" class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                    <span th:text="${doc.modality}">Modalidad</span>
+                                </div>
+                                <div class="text-xs text-slate-500" th:text="${doc.availabilityHours}">Horarios</div>
+                            </td>
+                            <td class="p-4 text-slate-600 text-sm font-medium" th:text="${doc.contactNumber} ?: 'No definido'">1234567</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(doctors)}">
+                            <td colspan="4" class="p-8 text-center text-slate-400">
+                                No hay médicos registrados en el sistema.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

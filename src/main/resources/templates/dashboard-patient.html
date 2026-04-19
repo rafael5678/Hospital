@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal Paciente - Hospy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 flex h-screen overflow-hidden text-slate-800">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-emerald-900 text-white flex flex-col">
+        <div class="p-6 border-b border-emerald-800">
+            <h2 class="text-2xl font-bold flex items-center gap-2">
+                <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                Hospy
+            </h2>
+            <p class="text-emerald-300 text-sm mt-1">Portal Paciente</p>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="/patient/dashboard" class="flex items-center gap-3 bg-emerald-800 text-white p-3 rounded-lg font-medium">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Mis Citas
+            </a>
+        </nav>
+        <div class="p-4 border-t border-emerald-800">
+            <a href="/logout" class="flex items-center gap-3 text-emerald-200 hover:text-white p-2 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto p-8">
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 mb-1" th:text="${'¡Hola, ' + patient.firstName + '!'}">¡Hola, Paciente!</h1>
+                <p class="text-slate-500">Aquí puedes revisar tu historial y próximas citas.</p>
+            </div>
+            <div class="text-right">
+                <p class="text-sm font-medium text-slate-500">Estatus actual</p>
+                <span class="inline-block mt-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold" th:text="${patient.status}">ACTIVO</span>
+            </div>
+        </div>
+
+        <!-- Directory Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h3 class="text-lg font-bold text-slate-800">Mi Agenda Médica</h3>
+                <a href="/patient/appointments/new" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    + Agendar Cita
+                </a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-slate-500 text-sm">
+                        <tr>
+                            <th class="p-4 font-medium">Médico</th>
+                            <th class="p-4 font-medium">Fecha y Hora</th>
+                            <th class="p-4 font-medium">Motivo</th>
+                            <th class="p-4 font-medium">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr th:each="appt : ${appointments}" class="hover:bg-slate-50/50 transition-colors">
+                            <td class="p-4">
+                                <div class="font-medium text-slate-800" th:text="${'Dr/a. ' + appt.doctor.lastName}">Dr.</div>
+                                <div class="text-xs text-slate-500" th:text="${appt.doctor.specialty}">Especialidad</div>
+                            </td>
+                            <td class="p-4">
+                                <div class="text-sm font-medium" th:text="${appt.appointmentDate}">N/A</div>
+                                <div class="text-xs text-slate-500" th:text="${appt.appointmentTime}">N/A</div>
+                            </td>
+                            <td class="p-4 text-slate-600 text-sm" th:text="${appt.reason} ?: 'Gral.'"></td>
+                            <td class="p-4 text-sm font-medium">
+                                <span th:if="${appt.status.name() == 'PENDING'}" class="text-amber-600 bg-amber-50 px-2 py-1 rounded">Pendiente</span>
+                                <span th:if="${appt.status.name() == 'CONFIRMED'}" class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Confirmada</span>
+                                <span th:if="${appt.status.name() == 'CANCELLED'}" class="text-red-600 bg-red-50 px-2 py-1 rounded">Cancelada</span>
+                                <span th:if="${appt.status.name() == 'COMPLETED'}" class="text-blue-600 bg-blue-50 px-2 py-1 rounded">Completada</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(appointments)}">
+                            <td colspan="4" class="p-8 text-center text-slate-400">
+                                No tienes citas agendadas. ¡Anímate a crear una!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
