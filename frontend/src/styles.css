@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .bg-gradient-to-tr {
+        background-image: linear-gradient(to top right, var(--tw-gradient-stops));
+    }
+}
