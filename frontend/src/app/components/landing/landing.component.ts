@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 export class LandingComponent implements OnInit {
   apiStatus: string = '';
   apiMessage: string = '';
+  isMenuOpen: boolean = false;
 
   constructor(private apiService: ApiService) {}
 
@@ -28,5 +29,9 @@ export class LandingComponent implements OnInit {
         this.apiMessage = 'No se pudo conectar con el backend de Spring Boot.';
       }
     });
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }
