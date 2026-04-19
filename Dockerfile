@@ -9,6 +9,9 @@ COPY pom.xml .
 # Copiamos el codigo fuente
 COPY src src
 
+# Damos permisos de ejecucion al wrapper antes de correrlo
+RUN chmod +x mvnw
+
 # Construimos la app saltando los tests
 RUN ./mvnw clean package -DskipTests
 
